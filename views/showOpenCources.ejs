@@ -1,0 +1,37 @@
+<%- include('include/header'); %>
+  <table class="table table-bordered table-sm table-dark table-striped">
+
+        <thead>
+
+        <tr>
+
+            <th>#</th>
+              <th>course </th>
+            <th>trainer </th>
+             <th>end_register  </th>
+            <th>end_date </th>
+            <th>start_date  </th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+
+
+<%for(var i=0; i<result.length; i++){ %>
+
+ <tr <% if( i%2==0) {%> class="success" <% } else if( i%2==1) %> class="info" >
+             <td><%= i %></td>
+             <td><%= result[i]['course_name']  %></td>
+             <td><%= result[i]['trainer_name']  %></td>
+             <td><%= result[i]['end_register']  %></td>
+             <td><%= result[i]['start_date']  %></td>
+             <td><%= result[i]['end_date']  %></td>
+         </tr>
+ <% } %>
+
+        </tbody>
+    </table>
+</div>
+
+

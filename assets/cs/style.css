@@ -1,0 +1,107 @@
+body {
+    background-color: #F3EBF6;
+    font-family: 'Ubuntu', sans-serif;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.product-list {
+
+    position: relative;
+    display: block;
+    margin: 1% 0 0 2%;
+    width: 90%;
+    list-style: none;
+}
+
+
+.logo {
+    position: relative;
+    width: 84%;
+    object-fit: cover;
+    height: 300px;
+    margin: 12px 0 0 8%;
+
+
+}
+
+.logo_image {
+    width: 100%;
+    object-fit: cover;
+    height: 300px;
+}
+
+.logo_text {
+    position: absolute;
+    background: #ffd3f470;
+    display: block;
+    width: 100%;
+    height: 70%;
+    text-align: center;
+    font-size: 9vw;
+    top: 15%;
+
+}
+
+.product-title {
+    font-size: 1vw;
+    font-family: 'Bradley Hand ITC';
+}
+
+
+.product-detail {
+    display: none;
+    width: 100%;
+}
+
+.product-prise, .product-title {
+    font-size: 2vw;
+
+}
+
+
+.image_selected {
+    position: absolute;
+    width: 192px;
+    top: 22px;
+    left: 30px;
+    visibility: hidden;
+}
+
+.image_selected_active {
+    visibility: visible;
+}
+
+.cart {
+    font-size: 68px;
+}
+
+
+.container {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+}
+
+.myCustumToast {
+    position: fixed;
+    margin-left: 25%;
+    margin-top: 25%;
+}
+
+footer {
+    position: relative;
+    clear: both;
+    display: block;
+    width: 100%;
+    background: #fc68d7;
+    height: 62px;
+    text-align: center;
+    font-size: 2vw;
+}
+
+footer p {
+    position: absolute;
+    margin-top: 11px;
+    text-align: center;
+    margin-left: 29%;
+}

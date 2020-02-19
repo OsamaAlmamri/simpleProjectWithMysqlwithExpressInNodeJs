@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>chat</title>
+    <!-- CSS (load bootstrap from a CDN)
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+-->
+
+    <!--    <link rel="stylesheet" href="bootstrap.min.css">-->
+    <!--    <link rel="stylesheet" href="/views/font-awesome-4.7.0/css/font-awesome.css">-->
+    <!--    <script src="./views/jquery.min.js"></script>-->
+    <!--    <script src="./views/popper.min.js"></script>-->
+    <!--    <script src="./views/bootstrap.min.js"></script>-->
+    <!--    -->
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.css">
+    <script src="jquery.min.js"></script>
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+
+    <style>
+        #box {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+            margin-top: 20px;
+            margin-bottom: 50px;
+            height: 600px;
+            /*background: aliceblue;*/
+            overflow: auto;
+            scroll-behavior: auto;
+
+        }
+
+        .messageLogin {
+            margin-top: 10%;
+        }
+
+        .resiver {
+            float: right;
+            margin: 15px;
+            background: paleturquoise;
+            width: 70%;
+            display: inline-block;
+
+
+        }
+
+        .join {
+            float: right;
+            margin: 15px;
+            margin-left: 10%;
+            /*background: paleturquoise;*/
+            width: 70%;
+            display: inline-block;
+
+        }
+
+        .sender {
+
+            display: inline-block;
+
+            background: #80bdff;
+            width: 70%;
+            margin: 15px;
+
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+    <div id="messageFiled" class="visible">
+        <ul class="list-unstyled" id="box">
+
+        </ul>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="text" placeholder="write something...">
+            <div class="input-group-append">
+                <button class="btn btn-danger" id="btn" type="button"><i class="fa fa-send-o"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <!--<div>
+
+
+        <h2>Alerts</h2>
+        <p>Alerts are created with the .alert class, followed by a contextual color classes:</p>
+        <div class="alert alert-success">
+            <strong>Success!</strong> This alert box could indicate a successful or positive action.
+        </div>
+        <div class="alert alert-info">
+            <strong>Info!</strong> This alert box could indicate a neutral informative change or action.
+        </div>
+        <div class="alert alert-warning">
+            <strong>Warning!</strong> This alert box could indicate a warning that might need attention.
+        </div>
+        <div class="alert alert-danger">
+            <strong>Danger!</strong> This alert box could indicate a dangerous or potentially negative action.
+        </div>
+        <div class="alert alert-primary">
+            <strong>Primary!</strong> Indicates an important action.
+        </div>
+        <div class="alert alert-secondary">
+              <strong>Secondary!</strong> Indicates a slightly less important action.
+        </div>
+        <div class="alert alert-dark">
+              <strong>Dark!</strong> Dark grey alert.
+        </div>
+        <div class="alert alert-light">
+              <strong>Light!</strong> Light grey alert.
+        </div>
+    </div>-->
+
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Warring</h4>
+                    <button type="button" class="close" data-dismiss="modal">X</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" id="modal-body">
+                    user name is selected <br>
+                    please enter another Name
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+    var s = new WebSocket('ws://localhost:7070');
+    var auth = 0;
+
+
+    var btn = document.getElementById('btn');
+    var txt = document.getElementById('text');
+    var box = document.getElementById('box');
+    var n = document.getElementById('username');
+    var name = $('#username').val();
+
+    $(document).on('change', '#username', function () {
+        name = $('#username').val();
+    });
+    $(document).on('click', '#btnLogin', function () {
+        // alert( $("#image").val());
+
+
+        var image = $('#image').val();
+        if (name.length < 4) {
+            $('#modal-body').html('<p> user name must be more than 3 chars</p>');
+            $("#myModal").modal();
+        } else {
+            if (image == "")
+                image = 0
+            // var data = '{"name":' + name + ',"image":' + image + '}';
+
+            s.send(name);
+
+
+        }
+    });
+
+
+    $(document).on('keydown ', '#text', function (e) {
+        if (e.keyCode == 13) {
+            if (auth == 0) {
+
+                if (n.value == '') {
+
+                    alert('enter your name ');
+                    return;
+                } else {
+                    s.send(n.value);
+                    auth = 1;
+                }
+
+            } else {
+                if (txt.value.length >= 3) {
+                    s.send(txt.value);
+                    txt.value = '';
+                } else {
+                    $('#modal-body').html('<p> message must  3 char or more</p>');
+                    $("#myModal").modal();
+                }
+
+
+            }
+        }
+
+
+    })
+
+    $(document).on('click', '#btn', function () {
+        if (auth == 0) {
+
+            if (n.value == '') {
+                $('#modal-body').html('<p> enter your name</p>');
+                $("#myModal").modal();
+                return;
+            } else {
+                s.send(n.value);
+                auth = 1;
+            }
+
+        } else {
+            if (txt.value.length >= 3) {
+                s.send(txt.value);
+                txt.value = '';
+            } else {
+                $('#modal-body').html('<p> message must  3 char or more</p>');
+                $("#myModal").modal();
+            }
+
+
+        }
+
+    })
+
+    s.onmessage = function (event) {
+
+        if (auth == 0) {
+            // alert('fsalse');
+            if (event.data == '0') {
+
+                $('#modal-body').html('<p> user name has been selected</p>');
+                $("#myModal").modal();
+            } else {
+                // $('#messageLogin').addClass('invisible');
+                $('#messageFiled').removeClass('invisible');
+                $('#messageLogin').html('<h3 class="text-center"> user ' + name + '</h3>');
+            }
+        }
+        // alert('trrr');
+
+
+        var ms = $("#box");
+        ms.html(ms.html() + event.data);
+
+
+    }
+</script>
+</body>
+</html>
+
+
+<<!doctype html>
+<html lang="en" class="fixed">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>V Mart</title>
+    <script src="/assets/admin/vendor/pace/pace.min.js"></script>
+    <link href="/assets/admin/vendor/pace/pace-theme-minimal.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/assets/admin/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/admin/vendor/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/assets/admin/vendor/animate.css/animate.css">
+    <!-- <link rel="stylesheet" href="vendor/data-table/media/css/dataTables.bootstrap.min.css">
+    -->
+    <link rel="stylesheet" href="/assets/admin/stylesheets/css/custom-bootstrap-margin-padding.css">
+    <link rel="stylesheet" href="/assets/admin/stylesheets/css/style.css">
+    <link rel="stylesheet" href="/assets/admin/stylesheets/css/minitoggle.css">
+
+    <link rel="stylesheet" href="/assets/admin/stylesheets/css/fileuploader.css">
+    <link rel="stylesheet" href="/assets/admin/stylesheets/css/fileuploader-theme-thumbnails.css">
+
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="page-header">
+        <div class="leftside-header">
+            <div class="logo">
+                <a href="#" class="on-click">
+                    <img # src="assets/images/logo_in.png"/>
+                </a>
+            </div>
+            <div id="menu-toggle" class="visible-xs toggle-left-sidebar" data-toggle-class="left-sidebar-open"
+                 data-target="html">
+                <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+            </div>
+        </div>
+        <div class="rightside-header">
+            <div class="header-middle"></div>
+            <div class="header-section hidden-xs" id="notice-headerbox">
+            </div>
+            <div class="header-section" id="user-headerbox">
+                <div class="user-header-wrap">
+                    <div class="user-photo">
+                        <img src=""/>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Osama </span>
+                        <span class="user-profile"></span>
+                    </div>
+                    <i class="fa fa-plus icon-open" aria-hidden="true"></i>
+                    <i class="fa fa-minus icon-close" aria-hidden="true"></i>
+                </div>
+                <div class="user-options dropdown-box">
+                    <div class="drop-content basic">
+                        <ul>
+                            <li><a href="/adminChangePassword"><i class="fa fa-user" aria-hidden="true"></i> Change
+                                Password</a></li>
+                            <li><a href="/adminLogout"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="left-sidebar">
+            <!-- left sidebar HEADER -->
+            <div class="left-sidebar-header">
+                <div class="left-sidebar-title">Navigation</div>
+                <div class="left-sidebar-toggle c-hamburger c-hamburger--htla hidden-xs"
+                     data-toggle-class="left-sidebar-collapsed" data-target="html">
+                    <span></span>
+                </div>
+            </div>
+            <!-- NAVIGATION -->
+            <!-- ========================================================= -->
+            <div id="left-nav" class="nano">
+                <div class="nano-content">
+
+                    <nav>
+
+
+                        <ul class="nav" id="main-nav">
+
+                            <li class="has-child-item close-item <%-checkCondition(['/advertiserInfoApply','/newAdvertiser','/offerInfo','/advertiserOfferList','/allAdvertiser','/advertiserInfo'].includes(pathName),true,'open-item')%>">
+                                <a> <span>Manage Business</span></a>
+                                <ul class="nav child-nav level-1">
+                                    <li class=""><a href="/allAdvertiser">All Advertiser</a></li>
+                                </ul>
+                            </li>
+
+
+                            <li class="has-child-item"><a> <span>Manage Offers / Advertisements </span></a>
+                                <ul class="nav child-nav level-1">
+                                    <li><a href="/allOfferList?type=ongoing">All Offers</a></li>
+                                    <li><a href="/allOfferList?type=ongoing">All Offers</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has-child-item close-item <%-checkCondition(['/allUserOfferList','/newUserOfferList','/newUserOfferInfo','/newUserOfferInfoApprove'].includes(pathName),true,'open-item')%>">
+                                <a> <span>Manage Personal Offers </span></a>
+                                <ul class="nav child-nav level-1">
+                                    <li class="<%-checkCondition(['/allUserOfferList','/newUserOfferInfo'].includes(pathName),true,'active-item')%>">
+                                        <a href="/allUserOfferList?type=ongoing">All Offers</a></li>
+                                    <li class="<%-checkCondition(['/newUserOfferList','/newUserOfferInfoApprove'].includes(pathName),true,'active-item')%>">
+                                        <a href="/newUserOfferList?type=new">New Offers</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,35 @@
+<%- include('include/header'); %>
+
+  <table class="table table-bordered table-sm table-dark table-striped">
+
+        <thead>
+
+        <tr>
+            <th>#</th>
+              <th>name</th>
+            <th>email</th>
+            <th>phone </th>
+            <th>age  </th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+
+<%for(var i=0; i<result.length; i++){ %>
+
+ <tr <% if( i%2==0) {%> class="success" <% } else if( i%2==1) %> class="info" >
+             <td><%= i %></td>
+             <td><%= result[i]['name']  %></td>
+             <td><%= result[i]['email']  %></td>
+             <td><%= result[i]['phone']  %></td>
+
+             <td><%= result[i]['age']  %></td>
+         </tr>
+ <% } %>
+
+        </tbody>
+    </table>
+</div>
+
+
